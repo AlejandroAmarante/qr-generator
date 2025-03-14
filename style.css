@@ -4,87 +4,105 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
-  color: #333;
-  background-color: #f7f9fc;
+  color: #e2e8f0;
+  background-color: #121212;
+  font-family: "Inter", sans-serif;
 }
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
+
 /* Header styles */
 header {
   text-align: center;
   padding: 30px 0;
 }
+
 header h1 {
   font-size: 2.5rem;
   margin-bottom: 10px;
-  color: #2c3e50;
+  color: #e2e8f0;
 }
+
 header p {
-  color: #7f8c8d;
+  color: #94a3b8;
   font-size: 1.1rem;
 }
+
 /* Main content styles */
 main {
-  background-color: #fff;
+  background-color: #1e1e1e;
   border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   margin-bottom: 30px;
 }
+
 .qr-generator {
   display: flex;
   flex-wrap: wrap;
 }
+
 .form-container {
   flex: 1;
   min-width: 300px;
   padding: 30px;
 }
+
 .qr-result {
   flex: 1;
   min-width: 300px;
   padding: 30px;
+}
+
+#qr-container {
+  position: sticky;
+  top: 30%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
 }
+
 #qr-preview {
   width: 100%;
   height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px dashed #ddd;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  border: 1px dashed #a7a9ac;
+  border-radius: 5px;
 }
+
 #qr-preview canvas,
 #qr-preview svg,
 #qr-preview img {
   max-width: 100%;
   max-height: 100%;
 }
+
 #qr-preview p {
-  color: #95a5a6;
+  color: #a7a9ac;
   text-align: center;
 }
+
 /* Form styles */
 .form-group {
   margin-bottom: 20px;
 }
+
 label {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: #2c3e50;
+  color: #e2e8f0;
 }
+
 input[type="text"],
 input[type="url"],
 input[type="email"],
@@ -94,27 +112,35 @@ textarea,
 select {
   width: 100%;
   padding: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #2d3748;
   border-radius: 4px;
   font-size: 16px;
+  background-color: #2d3748;
+  color: #e2e8f0;
 }
+
 textarea {
   min-height: 100px;
   resize: vertical;
 }
+
 input[type="color"] {
   height: 40px;
   width: 100%;
   cursor: pointer;
   border: none;
+  background-color: #2d3748;
 }
+
 input[type="checkbox"] {
   margin-right: 10px;
   transform: scale(1.5);
+  accent-color: #3b82f6;
 }
+
 button {
   padding: 12px 24px;
-  background-color: #3498db;
+  background-color: #3b82f6;
   color: white;
   border: none;
   border-radius: 4px;
@@ -122,8 +148,13 @@ button {
   cursor: pointer;
   transition: background-color 0.3s;
 }
+
 button:hover {
-  background-color: #2980b9;
+  background-color: #2563eb;
+}
+
+button svg {
+  width: 20px;
 }
 
 /* QR Type Button Styles */
@@ -133,24 +164,32 @@ button:hover {
   gap: 10px;
   width: 100%;
 }
+
 .button-row {
   display: flex;
   gap: 10px;
   width: 100%;
 }
+
 .type-btn {
   flex: 1;
-  background-color: #f1f5f9;
-  color: #475569;
-  border: 1px solid #cbd5e1;
+  background-color: #2d3748;
+  color: #e2e8f0;
+  border: 1px solid #4a5568;
   padding: 12px 0;
   font-size: 0.95rem;
   font-weight: 500;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 }
+
 .type-btn:hover {
-  background-color: #e2e8f0;
+  background-color: #4a5568;
 }
+
 .type-btn.active {
   background-color: #3b82f6;
   color: white;
@@ -162,48 +201,79 @@ button:hover {
   gap: 10px;
   margin-top: 20px;
 }
+
 #download-svg {
   background-color: #3b82f6;
 }
+
 #download-svg:hover {
   background-color: #2563eb;
 }
+
 #download-png {
   background-color: #22c55e;
 }
+
 #download-png:hover {
-  background-color: #23a553;
+  background-color: #16a34a;
 }
+
 /* Utility classes */
 .hidden {
   display: none;
 }
+
 /* Footer styles */
 footer {
   text-align: center;
   padding: 20px 0;
-  color: #7f8c8d;
+  color: #94a3b8;
   font-size: 0.9rem;
 }
+
+/* GitHub icon with hover effect */
+#github-icon {
+  color: #94a3b8;
+  opacity: 0.5;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+#github-icon svg {
+  width: 48px;
+  height: 48px;
+}
+
+#github-icon:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .qr-generator {
     flex-direction: column;
   }
+
   .form-container {
     border-right: none;
   }
+
   .button-row {
     flex-wrap: wrap;
   }
+
   .type-btn {
     flex-basis: calc(50% - 5px);
   }
 }
+
 @media (max-width: 480px) {
   .type-btn {
     flex-basis: 100%;
   }
+
   .button-row {
     flex-direction: column;
   }

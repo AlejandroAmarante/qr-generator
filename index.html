@@ -6,35 +6,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Generator</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.318.0/lucide.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="imgs/qr-code-line.svg">
-    <!-- Include the QRCode.js library -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+    <script src=" https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js "></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.318.0/lucide.min.js"></script>
 </head>
 
 <body>
     <div class="container">
         <header>
             <h1>QR Code Generator</h1>
-            <p>Simple, open-source QR code generator</p>
+            <p>Effortless, Open-Source QR Codes for Everyone.</p>
         </header>
 
         <main>
             <div class="qr-generator">
                 <div class="form-container">
                     <div class="form-group">
-                        <label>QR Code Type:</label>
+                        <label>QR Code Type</label>
                         <div class="qr-type-buttons">
                             <div class="button-row">
-                                <button type="button" class="type-btn active" data-type="url">URL</button>
-                                <button type="button" class="type-btn" data-type="text">Text</button>
-                                <button type="button" class="type-btn" data-type="email">Email</button>
-                                <button type="button" class="type-btn" data-type="phone">Phone</button>
+                                <button type="button" class="type-btn active" data-type="url">
+                                    <i data-lucide="link" aria-hidden="true"></i> URL
+                                </button>
+                                <button type="button" class="type-btn" data-type="text">
+                                    <i data-lucide="text" aria-hidden="true"></i> Text
+                                </button>
+                                <button type="button" class="type-btn" data-type="email">
+                                    <i data-lucide="mail" aria-hidden="true"></i> Email
+                                </button>
+                                <button type="button" class="type-btn" data-type="phone">
+                                    <i data-lucide="phone" aria-hidden="true"></i> Phone
+                                </button>
                             </div>
                             <div class="button-row">
-                                <button type="button" class="type-btn" data-type="sms">SMS</button>
-                                <button type="button" class="type-btn" data-type="wifi">WiFi</button>
-                                <button type="button" class="type-btn" data-type="vcard">vCard</button>
+                                <button type="button" class="type-btn" data-type="sms">
+                                    <i data-lucide="message-circle" aria-hidden="true"></i> SMS
+                                </button>
+                                <button type="button" class="type-btn" data-type="wifi">
+                                    <i data-lucide="wifi" aria-hidden="true"></i> WiFi
+                                </button>
+                                <button type="button" class="type-btn" data-type="vcard">
+                                    <i data-lucide="user" aria-hidden="true"></i> vCard
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -44,7 +63,7 @@
                         <!-- Default URL form -->
                         <div id="url-fields" class="qr-type-fields">
                             <div class="form-group">
-                                <label for="url-input">Enter URL:</label>
+                                <label for="url-input">URL</label>
                                 <input type="url" id="url-input" placeholder="https://example.com" required
                                     autocomplete="off">
                             </div>
@@ -53,7 +72,7 @@
                         <!-- Text form -->
                         <div id="text-fields" class="qr-type-fields hidden">
                             <div class="form-group">
-                                <label for="text-input">Enter Text:</label>
+                                <label for="text-input">Text</label>
                                 <textarea id="text-input" placeholder="Enter your text here"
                                     autocomplete="off"></textarea>
                             </div>
@@ -62,16 +81,16 @@
                         <!-- Email form -->
                         <div id="email-fields" class="qr-type-fields hidden">
                             <div class="form-group">
-                                <label for="email-address">Email Address:</label>
+                                <label for="email-address">Email Address</label>
                                 <input type="email" id="email-address" placeholder="email@example.com"
                                     autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label for="email-subject">Subject (optional):</label>
+                                <label for="email-subject">Subject (optional)</label>
                                 <input type="text" id="email-subject" placeholder="Email subject" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label for="email-body">Body (optional):</label>
+                                <label for="email-body">Body (optional)</label>
                                 <textarea id="email-body" placeholder="Email content" autocomplete="off"></textarea>
                             </div>
                         </div>
@@ -79,7 +98,7 @@
                         <!-- Phone form -->
                         <div id="phone-fields" class="qr-type-fields hidden">
                             <div class="form-group">
-                                <label for="phone-input">Phone Number:</label>
+                                <label for="phone-input">Phone Number</label>
                                 <input type="tel" id="phone-input" placeholder="+1234567890" autocomplete="off">
                             </div>
                         </div>
@@ -87,11 +106,11 @@
                         <!-- SMS form -->
                         <div id="sms-fields" class="qr-type-fields hidden">
                             <div class="form-group">
-                                <label for="sms-number">Phone Number:</label>
+                                <label for="sms-number">Phone Number</label>
                                 <input type="tel" id="sms-number" placeholder="+1234567890" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label for="sms-message">Message (optional):</label>
+                                <label for="sms-message">Message (optional)</label>
                                 <textarea id="sms-message" placeholder="SMS message" autocomplete="off"></textarea>
                             </div>
                         </div>
@@ -99,16 +118,16 @@
                         <!-- WiFi form -->
                         <div id="wifi-fields" class="qr-type-fields hidden">
                             <div class="form-group">
-                                <label for="wifi-ssid">Network Name (SSID):</label>
+                                <label for="wifi-ssid">Network Name (SSID)</label>
                                 <input type="text" id="wifi-ssid" placeholder="WiFi Network Name" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label for="wifi-password">Password:</label>
+                                <label for="wifi-password">Password</label>
                                 <input type="password" id="wifi-password" placeholder="WiFi Password"
                                     autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label for="wifi-encryption">Encryption:</label>
+                                <label for="wifi-encryption">Encryption</label>
                                 <select id="wifi-encryption" autocomplete="off">
                                     <option value="WPA">WPA/WPA2</option>
                                     <option value="WEP">WEP</option>
@@ -116,7 +135,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="wifi-hidden">Hidden Network:</label>
+                                <label for="wifi-hidden">Hidden Network</label>
                                 <input type="checkbox" id="wifi-hidden" autocomplete="off">
                             </div>
                         </div>
@@ -124,32 +143,32 @@
                         <!-- vCard form -->
                         <div id="vcard-fields" class="qr-type-fields hidden">
                             <div class="form-group">
-                                <label for="vcard-name">Full Name:</label>
+                                <label for="vcard-name">Full Name</label>
                                 <input type="text" id="vcard-name" placeholder="John Doe" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label for="vcard-company">Company (optional):</label>
+                                <label for="vcard-company">Company (optional)</label>
                                 <input type="text" id="vcard-company" placeholder="Company Name" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label for="vcard-title">Job Title (optional):</label>
+                                <label for="vcard-title">Job Title (optional)</label>
                                 <input type="text" id="vcard-title" placeholder="Software Developer" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label for="vcard-phone">Phone Number:</label>
+                                <label for="vcard-phone">Phone Number</label>
                                 <input type="tel" id="vcard-phone" placeholder="+1234567890" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label for="vcard-email">Email:</label>
+                                <label for="vcard-email">Email</label>
                                 <input type="email" id="vcard-email" placeholder="email@example.com" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label for="vcard-website">Website (optional):</label>
+                                <label for="vcard-website">Website (optional)</label>
                                 <input type="url" id="vcard-website" placeholder="https://example.com"
                                     autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label for="vcard-address">Address (optional):</label>
+                                <label for="vcard-address">Address (optional)</label>
                                 <input type="text" id="vcard-address" placeholder="123 Main St, City, Country"
                                     autocomplete="off">
                             </div>
@@ -157,7 +176,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="qr-size">QR Code Size:</label>
+                        <label for="qr-size">QR Code Size</label>
                         <select id="qr-size" autocomplete="off">
                             <option value="150">Small (150x150)</option>
                             <option value="200" selected>Medium (200x200)</option>
@@ -167,37 +186,45 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="qr-color">Foreground Color:</label>
+                        <label for="qr-color">Foreground Color</label>
                         <input type="color" id="qr-color" value="#000000" autocomplete="off">
                     </div>
 
                     <div class="form-group">
-                        <label for="qr-bgcolor">Background Color:</label>
+                        <label for="qr-bgcolor">Background Color</label>
                         <input type="color" id="qr-bgcolor" value="#FFFFFF" autocomplete="off">
                     </div>
 
                 </div>
 
                 <div class="qr-result">
-                    <div id="qr-preview">
-                        <p>Your QR code will appear here</p>
-                    </div>
-                    <div class="download-options hidden" id="download-options">
-                        <button id="download-svg">Download SVG</button>
-                        <button id="download-png">Download PNG</button>
+                    <div id="qr-container">
+                        <div id="qr-preview">
+                            <p>Your QR code will appear here</p>
+                        </div>
+                        <div class="download-options hidden" id="download-options">
+                            <button id="download-svg">Download SVG</button>
+                            <button id="download-png">Download PNG</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
 
         <footer>
-            <a href="https://github.com/alejandroamarante/qr" target="_blank" font-size="32px">
-                <i class="ri-github-fill ri-1x" id="github-icon" title="GitHub" aria-hidden="true"></i>
+            <a href="https://github.com/alejandroamarante/qr-generator" target="_blank" id="github-icon">
+                <i data-lucide="github" title="GitHub" aria-hidden="true"></i>
             </a>
         </footer>
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function () {
+            lucide.createIcons();
+        });
+    </script>
 </body>
 
 </html>

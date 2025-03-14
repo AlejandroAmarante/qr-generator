@@ -51,6 +51,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Reset currentQrData when type changes to force regeneration
       currentQrData = "";
+      qrPreview.innerHTML = "<p>Your QR code will appear here</p>";
+      qrGenerated = false;
+      downloadOptions.classList.add("hidden");
 
       // Update QR code when type changes
       setTimeout(updateQRCode, 10);
@@ -60,6 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Add event listeners to all input fields to trigger updates
   function addUpdateListeners() {
     qrGenerated = false;
+
     // Add listeners to the styling controls
     qrColor.addEventListener("input", function () {
       if (qrGenerated) {
