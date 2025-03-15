@@ -8,6 +8,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const qrSize = document.getElementById("qr-size");
   const qrColor = document.getElementById("qr-color");
   const qrBgcolor = document.getElementById("qr-bgcolor");
+  const containerColor = document.getElementById("container-color");
+  const containerRadius = document.getElementById("container-radius");
+  const containerPadding = document.getElementById("container-padding");
+  const radiusValue = document.getElementById("radius-value");
+  const paddingValue = document.getElementById("padding-value");
 
   // QR Code Type form fields
   const formFields = {
@@ -60,9 +65,23 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  // Update container style function
+  function updateContainerStyle() {
+    const qrContainer = document.getElementById("qr-code-container");
+    if (qrContainer) {
+      qrContainer.style.backgroundColor = qrBgcolor.value; // Use the QR background color
+      qrContainer.style.borderRadius = containerRadius.value + "px";
+      qrContainer.style.padding = containerPadding.value + "px";
+    }
+  }
+
   // Add event listeners to all input fields to trigger updates
   function addUpdateListeners() {
     qrGenerated = false;
+
+    // Update display values for range inputs initially
+    if (radiusValue) radiusValue.textContent = containerRadius.value + "px";
+    if (paddingValue) paddingValue.textContent = containerPadding.value + "px";
 
     // Add listeners to the styling controls
     qrColor.addEventListener("input", function () {
@@ -75,7 +94,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     qrBgcolor.addEventListener("input", function () {
       if (qrGenerated) {
-        // Force update for visual changes
+        // Update the container style immediately when background color changes
+        updateContainerStyle();
+        // Also force QR code update if needed
         currentQrData = "";
         updateQRCode();
       }
@@ -86,6 +107,20 @@ document.addEventListener("DOMContentLoaded", function () {
         // Force update for visual changes
         currentQrData = "";
         updateQRCode();
+      }
+    });
+
+    containerRadius.addEventListener("input", function () {
+      radiusValue.textContent = this.value + "px";
+      if (qrGenerated) {
+        updateContainerStyle();
+      }
+    });
+
+    containerPadding.addEventListener("input", function () {
+      paddingValue.textContent = this.value + "px";
+      if (qrGenerated) {
+        updateContainerStyle();
       }
     });
 
@@ -269,6 +304,11 @@ document.addEventListener("DOMContentLoaded", function () {
       // Generate the QR code
       new QRCode(qrContainer, options);
 
+      // Apply container styling after a short delay
+      setTimeout(() => {
+        updateContainerStyle();
+      }, 50);
+
       // Mark that we've generated a QR code
       qrGenerated = true;
 
@@ -312,13 +352,52 @@ document.addEventListener("DOMContentLoaded", function () {
     const qrImage = document.querySelector("#qr-code-container canvas");
     if (!qrImage) return;
 
+    // Create a temporary canvas to include padding and border radius
+    const tempCanvas = document.createElement("canvas");
+    const padding = parseInt(containerPadding.value);
+    const totalSize = qrImage.width + padding * 2;
+
+    tempCanvas.width = totalSize;
+    tempCanvas.height = totalSize;
+
+    const ctx = tempCanvas.getContext("2d");
+
+    // Draw rounded rectangle for background using the QR background color
+    const radius = parseInt(containerRadius.value);
+    ctx.fillStyle = qrBgcolor.value; // Use QR background color here
+    roundedRect(ctx, 0, 0, totalSize, totalSize, radius);
+
+    // Draw the QR code
+    ctx.drawImage(qrImage, padding, padding);
+
     // Create a download link
     const a = document.createElement("a");
-    a.href = qrImage.toDataURL("image/png");
+    a.href = tempCanvas.toDataURL("image/png");
     a.download = "qrcode.png";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+
+    // Helper function for drawing rounded rectangles
+    function roundedRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(
+        x + width,
+        y + height,
+        x + width - radius,
+        y + height
+      );
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+      ctx.fill();
+    }
   });
 
   // Helper function to convert canvas to SVG
@@ -327,17 +406,27 @@ document.addEventListener("DOMContentLoaded", function () {
     const pixelData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const backgroundColor = qrBgcolor.value;
     const foregroundColor = qrColor.value;
+    // Use backgroundColor for containerBgColor
+    const containerBgColor = backgroundColor;
+    const borderRadius = parseInt(containerRadius.value);
+    const padding = parseInt(containerPadding.value);
 
     // Calculate the module size (QR code cell size)
     const moduleSize = canvas.width / Math.sqrt(pixelData.data.length / 4);
 
-    // Create SVG content
-    let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${canvas.width} ${canvas.height}">`;
+    // Calculate adjusted size with padding
+    const totalSize = size + padding * 2;
 
-    // Add background
-    svgContent += `<rect width="100%" height="100%" fill="${backgroundColor}"/>`;
+    // Create SVG content with container
+    let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${totalSize}" height="${totalSize}" viewBox="0 0 ${totalSize} ${totalSize}">`;
 
-    // Add QR code modules
+    // Add container with border radius
+    svgContent += `<rect width="100%" height="100%" fill="${containerBgColor}" rx="${borderRadius}" ry="${borderRadius}"/>`;
+
+    // Add QR background with padding offset
+    svgContent += `<rect x="${padding}" y="${padding}" width="${size}" height="${size}" fill="${backgroundColor}"/>`;
+
+    // Add QR code modules with padding offset
     for (let y = 0; y < canvas.height; y += moduleSize) {
       for (let x = 0; x < canvas.width; x += moduleSize) {
         // Check if this module is black
@@ -348,8 +437,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // If the pixel is dark (QR code module)
         if (r + g + b < 384) {
-          // Simple threshold for black/white detection
-          svgContent += `<rect x="${x}" y="${y}" width="${moduleSize}" height="${moduleSize}" fill="${foregroundColor}"/>`;
+          // Scale the coordinates to the target size and add padding
+          const scaledX = (x / canvas.width) * size + padding;
+          const scaledY = (y / canvas.height) * size + padding;
+          const scaledSize = (moduleSize / canvas.width) * size;
+
+          svgContent += `<rect x="${scaledX}" y="${scaledY}" width="${scaledSize}" height="${scaledSize}" fill="${foregroundColor}"/>`;
         }
       }
     }

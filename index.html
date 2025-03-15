@@ -185,6 +185,8 @@
                         </select>
                     </div>
 
+
+
                     <div class="form-group">
                         <label for="qr-color">Foreground Color</label>
                         <input type="color" id="qr-color" value="#000000" autocomplete="off">
@@ -195,6 +197,18 @@
                         <input type="color" id="qr-bgcolor" value="#FFFFFF" autocomplete="off">
                     </div>
 
+                    <div class="form-group">
+                        <label for="container-radius">Container Border Radius</label>
+                        <input type="range" id="container-radius" min="0" max="20" value="5" autocomplete="off">
+                        <span id="radius-value">5px</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="container-padding">Container Padding</label>
+                        <input type="range" id="container-padding" min="0" max="30" value="10" autocomplete="off">
+                        <span id="padding-value">10px</span>
+                    </div>
+
                 </div>
 
                 <div class="qr-result">
@@ -203,8 +217,10 @@
                             <p>Your QR code will appear here</p>
                         </div>
                         <div class="download-options hidden" id="download-options">
-                            <button id="download-svg">Download SVG</button>
-                            <button id="download-png">Download PNG</button>
+                            <button id="download-svg"><i data-lucide="download" aria-hidden="true"></i>Download
+                                SVG</button>
+                            <button id="download-png"><i data-lucide="download" aria-hidden="true"></i>Download
+                                PNG</button>
                         </div>
                     </div>
                 </div>
