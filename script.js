@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const qrSize = document.getElementById("qr-size");
   const qrColor = document.getElementById("qr-color");
   const qrBgcolor = document.getElementById("qr-bgcolor");
-  const containerColor = document.getElementById("container-color");
   const containerRadius = document.getElementById("container-radius");
   const containerPadding = document.getElementById("container-padding");
   const radiusValue = document.getElementById("radius-value");
