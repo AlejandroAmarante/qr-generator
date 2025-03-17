@@ -154,6 +154,8 @@ input[type="checkbox"] {
 .form-range input[type="range"] {
   width: 100%;
   cursor: pointer;
+  margin: 10px 0;
+  accent-color: #286ad7;
 }
 
 /* Buttons */
