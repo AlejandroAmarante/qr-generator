@@ -54,9 +54,24 @@ main {
 
 .form-container,
 .qr-result {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   flex: 1;
   min-width: 300px;
   padding: 30px;
+}
+
+.qr-type-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* QR Code display */
@@ -98,13 +113,8 @@ main {
 }
 
 /* Form elements */
-.form-group {
-  margin-bottom: 20px;
-}
-
 label {
   display: block;
-  margin-bottom: 8px;
   font-weight: 600;
   color: #e2e8f0;
 }
@@ -140,9 +150,9 @@ input[type="color"] {
 }
 
 input[type="checkbox"] {
-  margin-right: 10px;
   transform: scale(1.5);
   accent-color: #3b82f6;
+  align-self: flex-start
 }
 
 /* Range inputs */
