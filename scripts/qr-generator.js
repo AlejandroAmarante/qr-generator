@@ -115,7 +115,30 @@ const QRGenerator = {
   reset() {
     this.currentQrData = "";
     this.qrGenerated = false;
-    this.elements.qrPreview.innerHTML = "<p>Your QR code will appear here</p>";
+
+    // Clear the preview
+    this.elements.qrPreview.innerHTML = "";
+
+    // Create message container
+    const messageDiv = document.createElement("div");
+    messageDiv.id = "qr-message";
+
+    // Add icon
+    const icon = document.createElement("i");
+    icon.setAttribute("data-lucide", "qr-code");
+
+    // Add text
+    const text = document.createElement("p");
+    text.textContent = "Your QR code will appear here";
+
+    // Build the structure
+    messageDiv.appendChild(icon);
+    messageDiv.appendChild(text);
+    this.elements.qrPreview.appendChild(messageDiv);
+
+    // Initialize the icon
+    lucide.createIcons();
+
     this.elements.downloadOptions.classList.add("hidden");
   },
 };

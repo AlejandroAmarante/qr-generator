@@ -4,6 +4,7 @@ const DOMElements = {
   init() {
     this.typeButtons = document.querySelectorAll(".type-btn");
     this.qrPreview = document.getElementById("qr-preview");
+    this.qrMessage = document.getElementById("qr-message");
     this.downloadOptions = document.getElementById("download-options");
     this.downloadSvgBtn = document.getElementById("download-svg");
     this.downloadPngBtn = document.getElementById("download-png");
@@ -27,7 +28,7 @@ const DOMElements = {
     };
 
     return this;
-  }
+  },
 };
 
 export default DOMElements;
