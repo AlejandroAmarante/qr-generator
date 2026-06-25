@@ -7,7 +7,6 @@
 
 body {
   font-family: "Inter", sans-serif;
-  line-height: 1.6;
   color: #e2e8f0;
   background-color: #121212;
 }
@@ -72,6 +71,13 @@ main {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 100%;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }
 
 /* QR Code display */
@@ -101,7 +107,7 @@ main {
   max-height: 100%;
 }
 
-#qr-message {
+.qr-message {
   color: #94a3b8;
   text-align: center;
   margin: 88px 0;
@@ -110,16 +116,20 @@ main {
   gap: 5px;
 }
 
-#qr-message svg {
+.qr-message svg {
   width: 64px;
   height: 64px;
   margin: 0 auto;
 }
 
 #qr-code-container {
-  margin: 25px;
+  margin: 30px;
   background: #fff;
   border-radius: 5px;
+}
+
+#qr-code-container canvas {
+  display: block;
 }
 
 /* Form elements */
@@ -155,13 +165,23 @@ input[type="color"] {
   height: 40px;
   width: 100%;
   cursor: pointer;
-  border: none;
+  border: 1px solid #343840;
   background-color: #2d3748;
+  border-radius: 4px;
+}
+
+input[type="color"]::-moz-color-swatch,
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
 }
 
 input[type="checkbox"] {
   transform: scale(1.5);
-  accent-color: #3b82f6;
+  accent-color: #2563eb;
   align-self: flex-start;
 }
 
@@ -175,13 +195,13 @@ input[type="checkbox"] {
   width: 100%;
   cursor: pointer;
   margin: 10px 0;
-  accent-color: #286ad7;
+  accent-color: #2563eb;
 }
 
 /* Buttons */
 button {
   padding: 12px 24px;
-  background-color: #3b82f6;
+  background-color: #2563eb;
   color: white;
   border: none;
   border-radius: 4px;
@@ -236,7 +256,7 @@ button svg {
 }
 
 .type-btn.active {
-  background-color: #286ad7;
+  background-color: #2563eb;
   color: white;
   border-color: #2563eb;
 }
@@ -274,6 +294,20 @@ button svg {
 footer {
   text-align: center;
   padding: 30px 0;
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+footer p {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+footer a {
+  color: #286ad7;
 }
 
 /* GitHub icon */
@@ -284,6 +318,7 @@ footer {
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
+  width: fit-content;
 }
 
 #github-icon svg {

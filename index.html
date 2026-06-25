@@ -11,7 +11,7 @@
         rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="imgs/qr-code-line.svg">
 
-    <script src=" https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js "></script>
+    <script src="qrcore.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
@@ -19,7 +19,7 @@
     <div class="container">
         <header>
             <h1>QR Code Generator</h1>
-            <p>Effortless, Open-Source QR Codes</p>
+            <p>Effortless QR Codes</p>
         </header>
 
         <main>
@@ -120,7 +120,7 @@
                                 <input type="text" id="wifi-ssid" placeholder="WiFi Network Name" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label for="wifi-password">Password<span class="required"> *</span></label>
+                                <label for="wifi-password">Password</label>
                                 <input type="password" id="wifi-password" placeholder="WiFi Password"
                                     autocomplete="off">
                             </div>
@@ -174,7 +174,18 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="qr-size">QR Code Size</label>
+                        <label for="qr-error-correction-level">Error Correction Level</label>
+                        <select id="qr-error-correction-level" autocomplete="off">
+                            <option value="A" selected>Automatic (H → Q → M → L)</option>
+                            <option value="H">High (30% of codewords can be restored)</option>
+                            <option value="Q">Quartile (25% of codewords can be restored)</option>
+                            <option value="M">Medium (15% of codewords can be restored)</option>
+                            <option value="L">Low (7% of codewords can be restored)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="qr-size">Size</label>
                         <select id="qr-size" autocomplete="off">
                             <option value="150">Small (150x150)</option>
                             <option value="200" selected>Medium (200x200)</option>
@@ -183,14 +194,15 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="qr-color">Foreground Color</label>
-                        <input type="color" id="qr-color" value="#000000" autocomplete="off">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="qr-bgcolor">Background Color</label>
-                        <input type="color" id="qr-bgcolor" value="#FFFFFF" autocomplete="off">
+                    <div class="form-group flex-row">
+                        <div class="form-group">
+                            <label for="qr-color">Foreground Color</label>
+                            <input type="color" id="qr-color" value="#000000" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="qr-bgcolor">Background Color</label>
+                            <input type="color" id="qr-bgcolor" value="#FFFFFF" autocomplete="off">
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -205,10 +217,11 @@
                         <label for="container-padding">Container Padding</label>
                         <div class="form-range">
                             <span id="padding-value">10px</span>
-                            <input type="range" id="container-padding" min="0" max="30" value="10" autocomplete="off">
+                            <input type="range" id="container-padding" min="0" max="10" value="1" autocomplete="off">
                         </div>
                     </div>
-
+                    <button id="reset-design"><i data-lucide="rotate-ccw" aria-hidden="true"></i>Reset
+                        Design</button>
                 </div>
 
                 <div class="qr-result">
@@ -234,6 +247,9 @@
             <a href="https://github.com/alejandroamarante/qr-generator" target="_blank" id="github-icon">
                 <i data-lucide="github" title="GitHub" aria-hidden="true"></i>
             </a>
+            <p><strong>QR Code</strong> is a registered trademark of <a href="https://www.qrcode.com/en/"
+                    target="_blank">DENSO WAVE
+                    INCORPORATED</a>
         </footer>
     </div>
 

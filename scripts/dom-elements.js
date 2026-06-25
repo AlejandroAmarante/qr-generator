@@ -8,6 +8,9 @@ const DOMElements = {
     this.downloadOptions = document.getElementById("download-options");
     this.downloadSvgBtn = document.getElementById("download-svg");
     this.downloadPngBtn = document.getElementById("download-png");
+    this.qrErrorCorrectionLevel = document.getElementById(
+      "qr-error-correction-level"
+    )
     this.qrSize = document.getElementById("qr-size");
     this.qrColor = document.getElementById("qr-color");
     this.qrBgcolor = document.getElementById("qr-bgcolor");
@@ -15,6 +18,7 @@ const DOMElements = {
     this.containerPadding = document.getElementById("container-padding");
     this.radiusValue = document.getElementById("radius-value");
     this.paddingValue = document.getElementById("padding-value");
+    this.resetDesignBtn = document.getElementById("reset-design"); // Add this line
 
     // QR Code Type form fields
     this.formFields = {

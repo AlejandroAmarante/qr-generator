@@ -6,25 +6,37 @@ const QRStyleManager = {
     this.qrGenerator = qrGenerator;
 
     // Set initial display values for range inputs
-    if (this.elements.radiusValue) 
-      this.elements.radiusValue.textContent = this.elements.containerRadius.value + "px";
-    
+    if (this.elements.radiusValue)
+      this.elements.radiusValue.textContent =
+        this.elements.containerRadius.value + "px";
+
     if (this.elements.paddingValue)
-      this.elements.paddingValue.textContent = this.elements.containerPadding.value + "px";
-    
+      this.elements.paddingValue.textContent =
+        this.elements.containerPadding.value + "px";
+
     // Add style-related event listeners
     this._addStyleListeners();
-    
+
     return this;
   },
 
-  // Update container styling
-  updateContainerStyle() {
-    const qrContainer = document.getElementById("qr-code-container");
-    if (qrContainer) {
-      qrContainer.style.backgroundColor = this.elements.qrBgcolor.value;
-      qrContainer.style.borderRadius = this.elements.containerRadius.value + "px";
-      qrContainer.style.padding = this.elements.containerPadding.value + "px";
+  resetToDefaults() {
+    // Reset form values
+    this.elements.qrErrorCorrectionLevel.value = "A";
+    this.elements.qrSize.value = "200";
+    this.elements.qrColor.value = "#000000";
+    this.elements.qrBgcolor.value = "#FFFFFF";
+    this.elements.containerRadius.value = "5";
+    this.elements.containerPadding.value = "1";
+
+    // Update display values
+    this.elements.radiusValue.textContent = "5px";
+    this.elements.paddingValue.textContent = "1px";
+
+    // Trigger QR code update
+    if (this.qrGenerator.qrGenerated) {
+      this.qrGenerator.currentQrData = "";
+      this.qrGenerator.updateQRCode();
     }
   },
 
@@ -41,7 +53,14 @@ const QRStyleManager = {
     // QR background color
     this.elements.qrBgcolor.addEventListener("input", () => {
       if (this.qrGenerator.qrGenerated) {
-        this.updateContainerStyle();
+        this.qrGenerator.currentQrData = "";
+        this.qrGenerator.updateQRCode();
+      }
+    });
+
+    // QR error correction level
+    this.elements.qrErrorCorrectionLevel.addEventListener("input", () => {
+      if (this.qrGenerator.qrGenerated) {
         this.qrGenerator.currentQrData = "";
         this.qrGenerator.updateQRCode();
       }
@@ -57,20 +76,28 @@ const QRStyleManager = {
 
     // Container radius
     this.elements.containerRadius.addEventListener("input", () => {
-      this.elements.radiusValue.textContent = this.elements.containerRadius.value + "px";
+      this.elements.radiusValue.textContent =
+        this.elements.containerRadius.value + "px";
       if (this.qrGenerator.qrGenerated) {
-        this.updateContainerStyle();
+        this.qrGenerator.currentQrData = "";
+        this.qrGenerator.updateQRCode();
       }
     });
 
     // Container padding
     this.elements.containerPadding.addEventListener("input", () => {
-      this.elements.paddingValue.textContent = this.elements.containerPadding.value + "px";
+      this.elements.paddingValue.textContent =
+        this.elements.containerPadding.value + "px";
       if (this.qrGenerator.qrGenerated) {
-        this.updateContainerStyle();
+        this.qrGenerator.currentQrData = "";
+        this.qrGenerator.updateQRCode();
       }
     });
-  }
+
+    this.elements.resetDesignBtn.addEventListener("click", () => {
+      this.resetToDefaults();
+    });
+  },
 };
 
 export default QRStyleManager;

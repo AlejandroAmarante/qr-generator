@@ -9,6 +9,7 @@ This project provides a simple yet powerful QR code generator that supports mult
 ## Features
 
 - **Multiple QR code types**:
+
   - URL
   - Plain text
   - Email with subject and body
@@ -18,6 +19,7 @@ This project provides a simple yet powerful QR code generator that supports mult
   - vCard contact information
 
 - **Customization options**:
+
   - Size selection
   - Custom foreground and background colors
   - Adjustable container border radius
@@ -31,13 +33,13 @@ This project provides a simple yet powerful QR code generator that supports mult
 
 The codebase is organized into modular components:
 
-- `dom-elements.js`: Centralizes DOM element references  
-- `qr-data-handler.js`: Handles QR code data formatting for different types  
-- `qr-style-manager.js`: Manages styling parameters  
-- `qr-generator.js`: Core QR code generation logic  
-- `download-manager.js`: Handles export functionality  
-- `type-selector.js`: Manages QR code type selection and form display  
-- `main.js`: Initializes and connects all components  
+- `dom-elements.js`: Centralizes DOM element references
+- `qr-data-handler.js`: Handles QR code data formatting for different types
+- `qr-style-manager.js`: Manages styling parameters
+- `qr-generator.js`: Core QR code generation logic
+- `download-manager.js`: Handles export functionality
+- `type-selector.js`: Manages QR code type selection and form display
+- `main.js`: Initializes and connects all components
 
 ## Dependencies
 
@@ -47,6 +49,7 @@ The codebase is organized into modular components:
 ## Browser Compatibility
 
 Works with all modern browsers that support:
+
 - ES6 modules
 - Canvas API
 - SVG
@@ -64,6 +67,10 @@ No build steps or compilation required.
 2. Fill in the required information in the form fields
 3. Customize the appearance using the style options
 4. Download the generated QR code in your preferred format
+
+## Acknowledgements
+
+**QR Code** is a registered trademark of [DENSO WAVE INCORPORATED](https://www.qrcode.com/en/).
 
 ## License
 
