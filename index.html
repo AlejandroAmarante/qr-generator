@@ -5,22 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Generator</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./css/style.css">
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
         rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="imgs/qr-code-line.svg">
 
-    <script src="qrcore.js"></script>
+    <script src="./lib/qrcore.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
     <div class="container">
-        <header>
-            <h1>QR Code Generator</h1>
-            <p>Effortless QR Codes</p>
-        </header>
 
         <main>
             <div class="qr-generator">
@@ -205,6 +201,69 @@
                         </div>
                     </div>
 
+                    <!-- ── Module Shape ──────────────────────────────────── -->
+                    <div class="form-group">
+                        <label>Module Shape</label>
+                        <div class="shape-selector">
+                            <button type="button" class="shape-btn active" data-shape="square" title="Square">
+                                <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <rect x="2" y="2" width="16" height="16" />
+                                </svg>
+                                Square
+                            </button>
+                            <button type="button" class="shape-btn" data-shape="rounded" title="Rounded">
+                                <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <rect x="2" y="2" width="16" height="16" rx="5" />
+                                </svg>
+                                Rounded
+                            </button>
+                            <button type="button" class="shape-btn" data-shape="circle" title="Circle">
+                                <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <circle cx="10" cy="10" r="8" />
+                                </svg>
+                                Circle
+                            </button>
+                            <button type="button" class="shape-btn" data-shape="diamond" title="Diamond">
+                                <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <polygon points="10,2 18,10 10,18 2,10" />
+                                </svg>
+                                Diamond
+                            </button>
+                            <button type="button" class="shape-btn" data-shape="star" title="Star">
+                                <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <polygon
+                                        points="10,2 12.4,7.8 18.5,8.2 14,12.5 15.5,18.5 10,15.2 4.5,18.5 6,12.5 1.5,8.2 7.6,7.8" />
+                                </svg>
+                                Star
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ── Center Logo ──────────────────────────────────── -->
+                    <div class="form-group">
+                        <label>Center Logo</label>
+                        <div class="logo-upload-area">
+                            <input type="file" id="logo-upload"
+                                accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml">
+                            <label for="logo-upload" class="logo-upload-label">
+                                <i data-lucide="image-plus" aria-hidden="true"></i>
+                                <span id="logo-upload-text">Upload image or SVG</span>
+                            </label>
+                            <span id="logo-filename"></span>
+                            <button type="button" id="logo-remove" class="hidden">
+                                <i data-lucide="x" aria-hidden="true"></i> Remove
+                            </button>
+                        </div>
+                        <div class="form-group hidden" id="logo-size-group">
+                            <label for="logo-size">Logo Size</label>
+                            <div class="form-range">
+                                <span id="logo-size-value">20%</span>
+                                <input type="range" id="logo-size" min="10" max="30" value="20" autocomplete="off">
+                            </div>
+                        </div>
+                        <p class="form-hint">Use High or Quartile error correction for best results with logos.</p>
+                    </div>
+
                     <div class="form-group">
                         <label for="container-radius">Container Border Radius</label>
                         <div class="form-range">
@@ -216,27 +275,31 @@
                     <div class="form-group">
                         <label for="container-padding">Container Padding</label>
                         <div class="form-range">
-                            <span id="padding-value">10px</span>
-                            <input type="range" id="container-padding" min="0" max="10" value="1" autocomplete="off">
+                            <span id="padding-value">8px</span>
+                            <input type="range" id="container-padding" min="0" max="24" value="8" autocomplete="off">
                         </div>
                     </div>
-                    <button id="reset-design"><i data-lucide="rotate-ccw" aria-hidden="true"></i>Reset
-                        Design</button>
+
+                    <button id="reset-design">
+                        <i data-lucide="rotate-ccw" aria-hidden="true"></i>Reset Design
+                    </button>
                 </div>
 
                 <div class="qr-result">
                     <div id="qr-container">
                         <div id="qr-preview">
-                            <div id="qr-message">
+                            <div id="qr-message" class="qr-message">
                                 <i data-lucide="qr-code"></i>
                                 <p>Your QR code will appear here</p>
                             </div>
                         </div>
                         <div class="download-options hidden" id="download-options">
-                            <button id="download-svg"><i data-lucide="download" aria-hidden="true"></i>Download
-                                SVG</button>
-                            <button id="download-png"><i data-lucide="download" aria-hidden="true"></i>Download
-                                PNG</button>
+                            <button id="download-svg">
+                                <i data-lucide="download" aria-hidden="true"></i>Download SVG
+                            </button>
+                            <button id="download-png">
+                                <i data-lucide="download" aria-hidden="true"></i>Download PNG
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -248,14 +311,12 @@
                 <i data-lucide="github" title="GitHub" aria-hidden="true"></i>
             </a>
             <p><strong>QR Code</strong> is a registered trademark of <a href="https://www.qrcode.com/en/"
-                    target="_blank">DENSO WAVE
-                    INCORPORATED</a>
+                    target="_blank">DENSO WAVE INCORPORATED</a></p>
         </footer>
     </div>
 
-    <script type="module" src="./scripts/main.js"></script>
+    <script type="module" src="./js/app.js"></script>
     <script>
-        // Initialize Lucide icons
         document.addEventListener('DOMContentLoaded', function () {
             lucide.createIcons();
         });

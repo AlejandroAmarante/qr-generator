@@ -1,0 +1,793 @@
+/* ============================================================
+   QR Generator — Stylesheet
+   ============================================================ */
+
+/* ── Reset ───────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── Design tokens ───────────────────────────────────────── */
+:root {
+  /* Surfaces */
+  --bg-base: #0d0d10;
+  --bg-card: #131318;
+  --bg-panel: #0d0d10;
+  --bg-input: #1c1c22;
+  --bg-hover: #24242c;
+
+  /* Borders */
+  --border-dim: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+
+  /* Text */
+  --text-primary: #eeeef0;
+  --text-secondary: #7e7e96;
+  --text-muted: #47475a;
+
+  /* Accent */
+  --accent: #3b82f6;
+  --accent-hover: #2d74e8;
+  --accent-dim: rgba(59, 130, 246, 0.14);
+  --accent-border: rgba(59, 130, 246, 0.32);
+
+  /* Status */
+  --green: #22c55e;
+  --green-dim: rgba(34, 197, 94, 0.12);
+  --green-border: rgba(34, 197, 94, 0.28);
+  --red: #f87171;
+
+  /* Radii */
+  --r-sm: 5px;
+  --r-md: 8px;
+  --r-lg: 12px;
+
+  /* Transitions */
+  --t-fast: 110ms ease;
+  --t-base: 180ms ease;
+}
+
+/* ── Base ────────────────────────────────────────────────── */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background-color: var(--bg-base);
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.028) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+  min-height: 100vh;
+}
+
+/* ── Animations ──────────────────────────────────────────── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes qr-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* ── Container ───────────────────────────────────────────── */
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 36px 24px 48px;
+  animation: fade-up 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+header {
+  text-align: center;
+  padding-bottom: 28px;
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  color: var(--text-primary);
+}
+
+header p {
+  margin-top: 6px;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── Main card ───────────────────────────────────────────── */
+main {
+  border-radius: var(--r-lg);
+  /*
+   * overflow: clip — visually clips border-radius like `hidden` does,
+   * but does NOT create a scroll container, so position: sticky
+   * on children still works relative to the page viewport.
+   */
+  overflow: clip;
+}
+
+.required {
+  color: var(--red);
+  opacity: 0.75;
+  font-style: normal;
+}
+
+/* ── Two-column layout ───────────────────────────────────── */
+.qr-generator {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+/* ── Form column ─────────────────────────────────────────── */
+.form-container {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 28px;
+  border: 1px solid var(--border-dim);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  /*
+   * Dark-surface shadow:
+   * — inset top highlight simulates ambient bounce light
+   * — soft mid drop for depth
+   * — wide diffuse layer for perceived elevation
+   */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 4px 12px rgba(0, 0, 0, 0.55),
+    0 20px 48px rgba(0, 0, 0, 0.35);
+  background-color: var(--bg-card);
+}
+
+/* ── QR result column ────────────────────────────────────── */
+.qr-result {
+  flex: 1;
+  min-width: 300px;
+  /*
+   * Must be at least 100vh tall so the sticky container
+   * has room to scroll within it.
+   */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+  background-color: transparent;
+}
+
+/* ── Sticky QR container — always vertically centered in viewport ── */
+/*
+ * top: 50vh   → pins the top edge of the element at 50% of the viewport
+ * translateY(-50%) → shifts it up by half its own height
+ * Result: the element's center tracks the viewport's vertical midpoint
+ * regardless of how far the user has scrolled.
+ */
+#qr-container {
+  position: sticky;
+  top: 50vh;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+/* ── QR preview box ──────────────────────────────────────── */
+#qr-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border: 1px dashed var(--border-default);
+  border-radius: var(--r-md);
+  background-color: var(--bg-card);
+  transition: border-color var(--t-base);
+  overflow: hidden;
+}
+
+/* Placeholder: fixed square while no code has been generated */
+#qr-preview:not(:has(#qr-code-container)) {
+  width: 220px;
+  height: 220px;
+}
+
+/* Once the code is present: shrink-wrap to the code's own dimensions */
+#qr-preview:has(#qr-code-container) {
+  width: auto;
+  height: auto;
+  border-style: solid;
+  border-color: var(--border-strong);
+}
+
+#qr-preview canvas,
+#qr-preview svg,
+#qr-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+}
+
+/* QR code entrance animation */
+#qr-code-container {
+  animation: qr-appear 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Download buttons — stacked vertically below QR ─────── */
+.download-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 220px;
+}
+
+#download-svg {
+  background-color: var(--accent);
+  color: #fff;
+  border-color: var(--accent-border);
+  width: 100%;
+}
+
+#download-svg:hover {
+  background-color: var(--accent-hover);
+}
+
+#download-png {
+  background-color: transparent;
+  color: var(--green);
+  border-color: var(--green-border);
+  width: 100%;
+}
+
+#download-png:hover {
+  background-color: var(--green-dim);
+  border-color: rgba(34, 197, 94, 0.45);
+}
+
+/* ── Empty / message state ───────────────────────────────── */
+.qr-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 56px 24px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.qr-message svg {
+  width: 44px;
+  height: 44px;
+  opacity: 0.35;
+}
+
+.qr-message p {
+  font-size: 0.8125rem;
+  letter-spacing: 0.03em;
+}
+
+/* ── QR type fields ──────────────────────────────────────── */
+.qr-type-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+}
+
+.flex-row {
+  flex-direction: row;
+  gap: 12px;
+}
+
+/* ── Labels ──────────────────────────────────────────────── */
+label {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* ── Text inputs ─────────────────────────────────────────── */
+input[type="text"],
+input[type="url"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+textarea,
+select {
+  width: 100%;
+  padding: 9px 11px;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--r-sm);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+  outline: none;
+  transition:
+    border-color var(--t-fast),
+    box-shadow var(--t-fast),
+    background-color var(--t-fast);
+  -webkit-appearance: none;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--border-strong);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+  background-color: #1e1e26;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* Custom select arrow */
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237e7e96'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  padding-right: 30px;
+}
+
+select option {
+  background-color: #1e1e26;
+  color: var(--text-primary);
+}
+
+/* Color pickers */
+input[type="color"] {
+  height: 38px;
+  width: 100%;
+  cursor: pointer;
+  padding: 3px;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--r-sm);
+  transition: border-color var(--t-fast);
+}
+
+input[type="color"]:hover {
+  border-color: var(--border-strong);
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 2px;
+}
+input[type="color"]::-moz-color-swatch {
+  border: none;
+  border-radius: 2px;
+}
+
+/* Checkbox */
+input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  accent-color: var(--accent);
+  align-self: flex-start;
+  margin-top: 3px;
+}
+
+/* ── Range slider ────────────────────────────────────────── */
+.form-range {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-range span {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  min-width: 34px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.form-range input[type="range"] {
+  flex: 1;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+/* ── Buttons — base ──────────────────────────────────────── */
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 18px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  border-radius: var(--r-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  transition:
+    background-color var(--t-fast),
+    border-color var(--t-fast),
+    color var(--t-fast),
+    box-shadow var(--t-fast),
+    transform var(--t-fast);
+}
+
+button:active {
+  transform: scale(0.965);
+}
+
+button svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+/* ── QR type selector buttons ────────────────────────────── */
+.qr-type-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.button-row {
+  display: flex;
+  gap: 7px;
+  width: 100%;
+}
+
+.type-btn {
+  flex: 1;
+  padding: 8px 4px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background-color: var(--bg-input);
+  color: var(--text-secondary);
+  border-color: var(--border-default);
+  border-radius: var(--r-sm);
+  letter-spacing: 0.01em;
+}
+
+.type-btn:hover:not(.active) {
+  background-color: var(--bg-hover);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.type-btn.active {
+  background-color: var(--accent-dim);
+  color: #93c5fd;
+  border-color: var(--accent-border);
+  font-weight: 600;
+}
+
+/* ── Reset design button ─────────────────────────────────── */
+#reset-design {
+  width: 100%;
+  background-color: transparent;
+  color: var(--text-secondary);
+  border-color: var(--border-default);
+  margin-top: 2px;
+}
+
+#reset-design:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+/* ── Module shape selector ───────────────────────────────── */
+.shape-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.shape-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 7px 10px;
+  min-width: 52px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: inherit;
+  opacity: 0.6;
+  transition:
+    opacity 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.shape-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+  display: block;
+}
+
+.shape-btn:hover {
+  opacity: 1;
+  border-color: currentColor;
+}
+
+.shape-btn.active {
+  opacity: 1;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Logo upload area ────────────────────────────────────── */
+.logo-upload-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Visually hidden native input; triggered by the label */
+#logo-upload {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.logo-upload-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border: 1px dashed currentColor;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.65;
+  transition:
+    opacity 0.15s,
+    border-color 0.15s;
+  white-space: nowrap;
+}
+
+.logo-upload-label:hover {
+  opacity: 1;
+  border-color: var(--accent);
+}
+
+#logo-filename {
+  font-size: 11px;
+  opacity: 0.7;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#logo-remove {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 9px;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  color: inherit;
+  opacity: 0.55;
+  transition: opacity 0.15s;
+}
+
+#logo-remove:hover {
+  opacity: 1;
+}
+
+#logo-size-group {
+  margin-top: 6px;
+}
+
+.form-hint {
+  margin-top: 5px;
+  font-size: 10px;
+  opacity: 0.45;
+  letter-spacing: 0.03em;
+}
+
+/* ── Utility ─────────────────────────────────────────────── */
+.hidden {
+  display: none !important;
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 32px 0 16px;
+  text-align: center;
+}
+
+footer p {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+footer a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  opacity: 0.55;
+  transition: opacity var(--t-fast);
+}
+
+footer a:hover {
+  opacity: 1;
+}
+
+#github-icon {
+  color: var(--text-muted);
+  opacity: 0.38;
+  text-decoration: none;
+  display: inline-block;
+  transition:
+    opacity var(--t-base),
+    transform var(--t-base);
+}
+
+#github-icon svg {
+  width: 36px;
+  height: 36px;
+  display: block;
+}
+
+#github-icon:hover {
+  opacity: 0.85;
+  transform: scale(1.1) rotate(-4deg);
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .qr-generator {
+    flex-direction: column;
+  }
+
+  .form-container {
+    border-right: none;
+    border-bottom: 1px solid var(--border-dim);
+  }
+
+  .qr-result {
+    background-color: var(--bg-card);
+    min-height: auto;
+  }
+
+  /* Mobile: natural document flow, no sticky viewport tracking */
+  #qr-container {
+    position: static;
+    transform: none;
+    padding: 24px 0 8px;
+    align-items: center;
+  }
+
+  .download-options {
+    max-width: 100%;
+  }
+
+  .button-row {
+    flex-wrap: wrap;
+  }
+
+  .type-btn {
+    flex-basis: calc(50% - 4px);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 16px 14px 32px;
+  }
+
+  .form-container,
+  .qr-result {
+    padding: 20px;
+  }
+
+  .type-btn {
+    flex-basis: 100%;
+  }
+
+  .button-row {
+    flex-direction: column;
+  }
+}
