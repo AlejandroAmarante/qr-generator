@@ -5,12 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Generator</title>
-    <link rel="stylesheet" href="./css/style.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
-        rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="imgs/qr-code-line.svg">
 
+    <!-- Performance: establish connections before the browser parses font URLs -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- SVG favicon — was incorrectly typed as image/x-icon -->
+    <link rel="icon" type="image/svg+xml" href="imgs/qr-code-line.svg">
+
+    <link rel="stylesheet" href="./css/style.css">
+    <!-- Only Inter is referenced in CSS; JetBrains Mono was imported but never used -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!--
+    QRCode (global) must be available before the module script runs.
+    Both of these are classic scripts, so they block parsing and execute
+    immediately — guaranteeing window.QRCode and window.lucide exist
+    when app.js is evaluated.
+  -->
     <script src="./lib/qrcore.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -18,9 +30,19 @@
 <body>
     <div class="container">
 
+        <!-- Header was fully styled in CSS but missing from the DOM -->
+        <header>
+            <h1>QR Generator</h1>
+            <p>Create, style &amp; export QR codes instantly</p>
+        </header>
+
         <main>
             <div class="qr-generator">
+
+                <!-- ── Form column ──────────────────────────────────────────── -->
                 <div class="form-container">
+
+                    <!-- QR type selector -->
                     <div class="form-group">
                         <label>QR Code Type</label>
                         <div class="qr-type-buttons">
@@ -52,30 +74,29 @@
                         </div>
                     </div>
 
-                    <!-- Dynamic form fields (will change based on QR type) -->
+                    <!-- Type-specific form fields; JS swaps which section is visible -->
                     <div id="dynamic-fields">
-                        <!-- Default URL form -->
+
                         <div id="url-fields" class="qr-type-fields">
                             <div class="form-group">
-                                <label for="url-input">URL<span class="required"> *</span></label>
+                                <label for="url-input">URL <span class="required" aria-hidden="true">*</span></label>
                                 <input type="url" id="url-input" placeholder="https://example.com" required
-                                    autocomplete="off">
+                                    autocomplete="off" spellcheck="false">
                             </div>
                         </div>
 
-                        <!-- Text form -->
                         <div id="text-fields" class="qr-type-fields hidden">
                             <div class="form-group">
-                                <label for="text-input">Text<span class="required"> *</span></label>
+                                <label for="text-input">Text <span class="required" aria-hidden="true">*</span></label>
                                 <textarea id="text-input" placeholder="Enter your text here"
                                     autocomplete="off"></textarea>
                             </div>
                         </div>
 
-                        <!-- Email form -->
                         <div id="email-fields" class="qr-type-fields hidden">
                             <div class="form-group">
-                                <label for="email-address">Email Address<span class="required"> *</span></label>
+                                <label for="email-address">Email Address <span class="required"
+                                        aria-hidden="true">*</span></label>
                                 <input type="email" id="email-address" placeholder="email@example.com"
                                     autocomplete="off">
                             </div>
@@ -89,19 +110,19 @@
                             </div>
                         </div>
 
-                        <!-- Phone form -->
                         <div id="phone-fields" class="qr-type-fields hidden">
                             <div class="form-group">
-                                <label for="phone-input">Phone Number<span class="required"> *</span></label>
-                                <input type="tel" id="phone-input" placeholder="+1234567890" autocomplete="off">
+                                <label for="phone-input">Phone Number <span class="required"
+                                        aria-hidden="true">*</span></label>
+                                <input type="tel" id="phone-input" placeholder="+1 234 567 8900" autocomplete="off">
                             </div>
                         </div>
 
-                        <!-- SMS form -->
                         <div id="sms-fields" class="qr-type-fields hidden">
                             <div class="form-group">
-                                <label for="sms-number">Phone Number<span class="required"> *</span></label>
-                                <input type="tel" id="sms-number" placeholder="+1234567890" autocomplete="off">
+                                <label for="sms-number">Phone Number <span class="required"
+                                        aria-hidden="true">*</span></label>
+                                <input type="tel" id="sms-number" placeholder="+1 234 567 8900" autocomplete="off">
                             </div>
                             <div class="form-group">
                                 <label for="sms-message">Message</label>
@@ -109,10 +130,10 @@
                             </div>
                         </div>
 
-                        <!-- WiFi form -->
                         <div id="wifi-fields" class="qr-type-fields hidden">
                             <div class="form-group">
-                                <label for="wifi-ssid">Network Name (SSID)<span class="required"> *</span></label>
+                                <label for="wifi-ssid">Network Name (SSID) <span class="required"
+                                        aria-hidden="true">*</span></label>
                                 <input type="text" id="wifi-ssid" placeholder="WiFi Network Name" autocomplete="off">
                             </div>
                             <div class="form-group">
@@ -121,24 +142,25 @@
                                     autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label for="wifi-encryption">Encryption<span class="required"> *</span></label>
+                                <label for="wifi-encryption">Encryption</label>
                                 <select id="wifi-encryption" autocomplete="off">
-                                    <option value="WPA">WPA/WPA2</option>
+                                    <option value="WPA">WPA / WPA2</option>
                                     <option value="WEP">WEP</option>
                                     <option value="nopass">None</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="wifi-hidden">Hidden Network</label>
+                            <!-- Checkbox: label sits beside the input, not above it -->
+                            <div class="form-group form-group--inline">
                                 <input type="checkbox" id="wifi-hidden" autocomplete="off">
+                                <label for="wifi-hidden">Hidden Network</label>
                             </div>
                         </div>
 
-                        <!-- vCard form -->
                         <div id="vcard-fields" class="qr-type-fields hidden">
                             <div class="form-group">
-                                <label for="vcard-name">Full Name<span class="required"> *</span></label>
-                                <input type="text" id="vcard-name" placeholder="John Doe" autocomplete="off">
+                                <label for="vcard-name">Full Name <span class="required"
+                                        aria-hidden="true">*</span></label>
+                                <input type="text" id="vcard-name" placeholder="Jane Doe" autocomplete="off">
                             </div>
                             <div class="form-group">
                                 <label for="vcard-company">Company</label>
@@ -146,14 +168,16 @@
                             </div>
                             <div class="form-group">
                                 <label for="vcard-title">Job Title</label>
-                                <input type="text" id="vcard-title" placeholder="Software Developer" autocomplete="off">
+                                <input type="text" id="vcard-title" placeholder="Software Engineer" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label for="vcard-phone">Phone Number<span class="required"> *</span></label>
-                                <input type="tel" id="vcard-phone" placeholder="+1234567890" autocomplete="off">
+                                <label for="vcard-phone">Phone <span class="required"
+                                        aria-hidden="true">*</span></label>
+                                <input type="tel" id="vcard-phone" placeholder="+1 234 567 8900" autocomplete="off">
                             </div>
                             <div class="form-group">
-                                <label for="vcard-email">Email<span class="required"> *</span></label>
+                                <label for="vcard-email">Email <span class="required"
+                                        aria-hidden="true">*</span></label>
                                 <input type="email" id="vcard-email" placeholder="email@example.com" autocomplete="off">
                             </div>
                             <div class="form-group">
@@ -167,44 +191,46 @@
                                     autocomplete="off">
                             </div>
                         </div>
-                    </div>
 
+                    </div><!-- /dynamic-fields -->
+
+                    <!-- Shared options -->
                     <div class="form-group">
-                        <label for="qr-error-correction-level">Error Correction Level</label>
+                        <label for="qr-error-correction-level">Error Correction</label>
                         <select id="qr-error-correction-level" autocomplete="off">
-                            <option value="A" selected>Automatic (H → Q → M → L)</option>
-                            <option value="H">High (30% of codewords can be restored)</option>
-                            <option value="Q">Quartile (25% of codewords can be restored)</option>
-                            <option value="M">Medium (15% of codewords can be restored)</option>
-                            <option value="L">Low (7% of codewords can be restored)</option>
+                            <option value="A" selected>Auto (H → Q → M → L)</option>
+                            <option value="H">High — restores up to 30%</option>
+                            <option value="Q">Quartile — restores up to 25%</option>
+                            <option value="M">Medium — restores up to 15%</option>
+                            <option value="L">Low — restores up to 7%</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="qr-size">Size</label>
+                        <label for="qr-size">Preview Size</label>
                         <select id="qr-size" autocomplete="off">
-                            <option value="150">Small (150x150)</option>
-                            <option value="200" selected>Medium (200x200)</option>
-                            <option value="300">Large (300x300)</option>
-                            <option value="400">Extra Large (400x400)</option>
+                            <option value="150">Small (150 px)</option>
+                            <option value="200" selected>Medium (200 px)</option>
+                            <option value="300">Large (300 px)</option>
+                            <option value="400">Extra Large (400 px)</option>
                         </select>
                     </div>
 
                     <div class="form-group flex-row">
                         <div class="form-group">
-                            <label for="qr-color">Foreground Color</label>
+                            <label for="qr-color">Foreground</label>
                             <input type="color" id="qr-color" value="#000000" autocomplete="off">
                         </div>
                         <div class="form-group">
-                            <label for="qr-bgcolor">Background Color</label>
+                            <label for="qr-bgcolor">Background</label>
                             <input type="color" id="qr-bgcolor" value="#FFFFFF" autocomplete="off">
                         </div>
                     </div>
 
-                    <!-- ── Module Shape ──────────────────────────────────── -->
+                    <!-- Module shape -->
                     <div class="form-group">
                         <label>Module Shape</label>
-                        <div class="shape-selector">
+                        <div class="shape-selector" role="group" aria-label="Module shape">
                             <button type="button" class="shape-btn active" data-shape="square" title="Square">
                                 <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <rect x="2" y="2" width="16" height="16" />
@@ -239,17 +265,18 @@
                         </div>
                     </div>
 
-                    <!-- ── Center Logo ──────────────────────────────────── -->
+                    <!-- Center logo -->
                     <div class="form-group">
                         <label>Center Logo</label>
                         <div class="logo-upload-area">
                             <input type="file" id="logo-upload"
-                                accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml">
+                                accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml"
+                                aria-label="Upload a center logo image">
                             <label for="logo-upload" class="logo-upload-label">
                                 <i data-lucide="image-plus" aria-hidden="true"></i>
                                 <span id="logo-upload-text">Upload image or SVG</span>
                             </label>
-                            <span id="logo-filename"></span>
+                            <span id="logo-filename" aria-live="polite"></span>
                             <button type="button" id="logo-remove" class="hidden">
                                 <i data-lucide="x" aria-hidden="true"></i> Remove
                             </button>
@@ -258,14 +285,15 @@
                             <label for="logo-size">Logo Size</label>
                             <div class="form-range">
                                 <span id="logo-size-value">20%</span>
-                                <input type="range" id="logo-size" min="10" max="25" value="20" autocomplete="off">
+                                <input type="range" id="logo-size" min="10" max="30" value="20" autocomplete="off">
                             </div>
                         </div>
-                        <p class="form-hint">Use High or Quartile error correction for best results with logos.</p>
+                        <p class="form-hint">Use High or Quartile error correction with logos.</p>
                     </div>
 
+                    <!-- Container cosmetics -->
                     <div class="form-group">
-                        <label for="container-radius">Container Border Radius</label>
+                        <label for="container-radius">Container Radius</label>
                         <div class="form-range">
                             <span id="radius-value">5px</span>
                             <input type="range" id="container-radius" min="0" max="30" value="5" autocomplete="off">
@@ -280,47 +308,54 @@
                         </div>
                     </div>
 
-                    <button id="reset-design">
-                        <i data-lucide="rotate-ccw" aria-hidden="true"></i>Reset Design
+                    <button type="button" id="reset-design">
+                        <i data-lucide="rotate-ccw" aria-hidden="true"></i> Reset Design
                     </button>
-                </div>
 
-                <div class="qr-result">
+                </div><!-- /form-container -->
+
+                <!-- ── QR preview column ────────────────────────────────────── -->
+                <div class="qr-result" aria-live="polite" aria-label="QR code preview">
                     <div id="qr-container">
                         <div id="qr-preview">
                             <div id="qr-message" class="qr-message">
-                                <i data-lucide="qr-code"></i>
+                                <i data-lucide="qr-code" aria-hidden="true"></i>
                                 <p>Your QR code will appear here</p>
                             </div>
                         </div>
                         <div class="download-options hidden" id="download-options">
-                            <button id="download-svg">
-                                <i data-lucide="download" aria-hidden="true"></i>Download SVG
+                            <button type="button" id="download-svg">
+                                <i data-lucide="download" aria-hidden="true"></i> Download SVG
                             </button>
-                            <button id="download-png">
-                                <i data-lucide="download" aria-hidden="true"></i>Download PNG
+                            <button type="button" id="download-png">
+                                <i data-lucide="download" aria-hidden="true"></i> Download PNG
                             </button>
                         </div>
                     </div>
-                </div>
-            </div>
+                </div><!-- /qr-result -->
+
+            </div><!-- /qr-generator -->
         </main>
 
         <footer>
-            <a href="https://github.com/alejandroamarante/qr-generator" target="_blank" id="github-icon">
-                <i data-lucide="github" title="GitHub" aria-hidden="true"></i>
+            <a href="https://github.com/alejandroamarante/qr-generator" target="_blank" rel="noopener noreferrer"
+                id="github-icon" aria-label="View source on GitHub">
+                <i data-lucide="github" aria-hidden="true"></i>
             </a>
-            <p><strong>QR Code</strong> is a registered trademark of <a href="https://www.qrcode.com/en/"
-                    target="_blank">DENSO WAVE INCORPORATED</a></p>
+            <p>
+                <strong>QR Code</strong> is a registered trademark of
+                <a href="https://www.qrcode.com/en/" target="_blank" rel="noopener noreferrer">DENSO WAVE
+                    INCORPORATED</a>
+            </p>
         </footer>
-    </div>
 
+    </div><!-- /container -->
+
+    <!--
+    type="module" scripts are deferred by spec — the DOM is fully parsed
+    before app.js executes. No DOMContentLoaded wrapper needed.
+  -->
     <script type="module" src="./js/app.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            lucide.createIcons();
-        });
-    </script>
 </body>
 
 </html>
